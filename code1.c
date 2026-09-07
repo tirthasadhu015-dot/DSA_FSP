@@ -1,3 +1,4 @@
+// This program finds the largest element in an array of integers entered by the user.
 #include <stdio.h>
 int main() {
     int n, i, MAX;

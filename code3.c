@@ -1,4 +1,3 @@
-//write a array program in C to find a sorted array.
 #include <stdio.h>
 int main() {
     int n, i, j, temp;

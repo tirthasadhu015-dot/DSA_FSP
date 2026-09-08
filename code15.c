@@ -1,4 +1,4 @@
-// Implement a singly linked list with basic operations
+// Implement a singly linked list with basic operations with deletion.
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -37,7 +37,7 @@ void insertAtEnd() {
     scanf("%d", &value);
     newnode->data = value;
     newnode->next = NULL;
-
+    
     if (head == NULL) {
         head = newnode;
     } else {
@@ -57,103 +57,125 @@ void insertAtPosition() {
         printf("Memory allocation failed!\n");
         return;
     }
-
+    
     printf("Enter data: ");
     scanf("%d", &value);
     printf("Enter position (1-based): ");
     scanf("%d", &position);
-
+    
     newnode->data = value;
-
+    
+    // If position is 1, insert at beginning
     if (position == 1) {
         newnode->next = head;
         head = newnode;
         printf("Node with data %d inserted at position %d.\n", value, position);
         return;
     }
-
+    
+    // Traverse to position-1
     struct node* temp = head;
     while (temp != NULL && count < position - 1) {
         temp = temp->next;
         count++;
     }
-
+    
+    // If position is invalid (beyond list length)
     if (temp == NULL) {
         printf("Invalid position! List has only %d nodes.\n", count);
         free(newnode);
         return;
     }
-
+    
+    // Insert at position
     newnode->next = temp->next;
     temp->next = newnode;
     printf("Node with data %d inserted at position %d.\n", value, position);
 }
 
-// Delete from beginning
+// Delete at the beginning
 void deleteAtBeginning() {
     if (head == NULL) {
-        printf("List is empty.\n");
+        printf("List is empty! Cannot delete.\n");
         return;
     }
+    
     struct node* temp = head;
     head = head->next;
-    printf("Node with data %d deleted from beginning.\n", temp->data);
+    printf("Deleted node with data %d from beginning.\n", temp->data);
     free(temp);
 }
 
-// Delete from end
+// Delete at the end
 void deleteAtEnd() {
     if (head == NULL) {
-        printf("List is empty.\n");
+        printf("List is empty! Cannot delete.\n");
         return;
     }
+    
+    // If only one node exists
     if (head->next == NULL) {
-        printf("Node with data %d deleted from end.\n", head->data);
+        printf("Deleted node with data %d from end.\n", head->data);
         free(head);
         head = NULL;
         return;
     }
+    
     struct node* temp = head;
-    while (temp->next->next != NULL)
+    struct node* prev = NULL;
+    
+    // Traverse to the last node
+    while (temp->next != NULL) {
+        prev = temp;
         temp = temp->next;
-    printf("Node with data %d deleted from end.\n", temp->next->data);
-    free(temp->next);
-    temp->next = NULL;
+    }
+    
+    // Delete the last node
+    prev->next = NULL;
+    printf("Deleted node with data %d from end.\n", temp->data);
+    free(temp);
 }
 
-// Delete from a specific position
+// Delete at a specific position (1-based indexing)
 void deleteAtPosition() {
-    int position, count = 1;
     if (head == NULL) {
-        printf("List is empty.\n");
+        printf("List is empty! Cannot delete.\n");
         return;
     }
-    printf("Enter position (1-based): ");
+    
+    int position, count = 1;
+    printf("Enter position to delete (1-based): ");
     scanf("%d", &position);
-
+    
+    // If position is 1, delete from beginning
     if (position == 1) {
         struct node* temp = head;
         head = head->next;
-        printf("Node with data %d deleted from position 1.\n", temp->data);
+        printf("Deleted node with data %d from position %d.\n", temp->data, position);
         free(temp);
         return;
     }
-
+    
     struct node* temp = head;
-    while (temp != NULL && count < position - 1) {
+    struct node* prev = NULL;
+    
+    // Traverse to the node at given position
+    while (temp != NULL && count < position) {
+        prev = temp;
         temp = temp->next;
         count++;
     }
-
-    if (temp == NULL || temp->next == NULL) {
-        printf("Invalid position! List has fewer nodes.\n");
+    
+    // If position is invalid
+    if (temp == NULL) {
+        printf("Invalid position! List has only %d nodes.\n", count - 1);
         return;
     }
-
-    struct node* del = temp->next;
-    temp->next = del->next;
-    printf("Node with data %d deleted from position %d.\n", del->data, position);
-    free(del);
+    
+    // Delete the node at position
+    prev->next = temp->next;
+    printf("Deleted node with data %d from position %d.\n", temp->data, position);
+    free(temp);
 }
 
 // Display the linked list
@@ -171,16 +193,6 @@ void display() {
     printf("NULL\n");
 }
 
-// Free all nodes before exit
-void freeList() {
-    struct node* temp;
-    while (head != NULL) {
-        temp = head;
-        head = head->next;
-        free(temp);
-    }
-}
-
 int main() {
     int ch;
     while (1) {
@@ -195,20 +207,34 @@ int main() {
         printf("8. Exit\n");
         printf("Enter your choice: ");
         scanf("%d", &ch);
-
+        
         switch (ch) {
-            case 1: insertAtBeginning(); break;
-            case 2: insertAtEnd(); break;
-            case 3: insertAtPosition(); break;
-            case 4: deleteAtBeginning(); break;
-            case 5: deleteAtEnd(); break;
-            case 6: deleteAtPosition(); break;
-            case 7: display(); break;
+            case 1:
+                insertAtBeginning();
+                break;
+            case 2:
+                insertAtEnd();
+                break;
+            case 3:
+                insertAtPosition();
+                break;
+            case 4:
+                deleteAtBeginning();
+                break;
+            case 5:
+                deleteAtEnd();
+                break;
+            case 6:
+                deleteAtPosition();
+                break;
+            case 7:
+                display();
+                break;
             case 8:
-                freeList();
                 printf("Exiting.\n");
                 exit(0);
-            default: printf("Invalid choice.\n");
+            default:
+                printf("Invalid choice.\n");
         }
     }
     return 0;

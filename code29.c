@@ -1,4 +1,4 @@
-//werite a c program of check palindrome using queue.
+//write a c program of check palindrome using queue.
 #include <stdio.h>
 #include <stdlib.h>
 #define MAX 100

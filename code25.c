@@ -1,4 +1,3 @@
-//convert decimal number to binary in C using stack.
 #include <stdio.h>
 #include <stdlib.h>
 #define MAX 100
